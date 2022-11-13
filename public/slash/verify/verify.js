@@ -7,14 +7,14 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("verify")
 		.setDescription(
-			"Verify yourself in the server!"
+			"ยืนยันบัญชีของคุณบน Server นี้"
 		),
 
 	async execute(interaction) {
         const domain = config.server.domain === 'localhost' ? `${config.server.domain}:${config.server.httpPort}` : `${config.server.domain}`; 
 
         if(interaction.member.roles.cache.some(r => r.id === config.Discord.verifiedRole)) {
-            await interaction.reply("Whoops, you are already verified!");
+            await interaction.reply("คุณยืนยันตัวตนไปแล้ว");
             return;
         }
 
@@ -33,18 +33,18 @@ module.exports = {
             .setDescription(config.Discord.rules);
 
         if(config.Discord.rulesEnabled) {
-            await interaction.reply('Please check your DMS!')
+            await interaction.reply('โปรดดูข้อความส่วนตัว')
 
             const linkID = pool.createLink(interaction.user.id);
 
             const captchaEmbed = new EmbedBuilder()
             .setColor('#0099ff')
             .setTitle('reCAPTCHA Verification')
-            .setDescription(`To gain access to this server you must solve a captcha. The link will expire in 15 minutes.\n${config.server.https ? 'https://' : 'http://'}${domain}/verify/${linkID}`)
+            .setDescription(`โปรดทำการยืนยันผ่าน Website ในเวลา 15 นาที \n${config.server.https ? 'https://' : 'http://'}${domain}/verify/${linkID}`)
 
             await interaction.user.createDM().then(async (dm) => {
                 await dm.send({ embeds: [captchaEmbed] }).catch(() => {
-                    logger.error(`Failed to send captcha to user! (Maybe they have DMs turned off?)`);
+                    logger.error(`ระบบไม่สามารถส่งข้อความได้คุณได้ดปิด DM รึยัง`);
                 });
             });
 
@@ -56,11 +56,11 @@ module.exports = {
             const captchaEmbed = new EmbedBuilder()
             .setColor('#0099ff')
             .setTitle('reCAPTCHA Verification')
-            .setDescription(`To gain access to this server you must solve a captcha. The link will expire in 15 minutes.\n${config.server.https ? 'https://' : 'http://'}${domain}/verify/${linkID}`)
+            .setDescription(`โปรดทำการยืนยันผ่าน Website ในเวลา 15 นาที \n${config.server.https ? 'https://' : 'http://'}${domain}/verify/${linkID}`)
 
             await interaction.user.createDM().then(async (dm) => {
                 await dm.send({ embeds: [captchaEmbed] }).catch(() => {
-                    logger.error(`Failed to send captcha to user! (Maybe they have DMs turned off?)`);
+                    logger.error(`ระบบไม่สามารถส่งข้อความได้คุณได้ดปิด DM รึยัง`);
                 })
 
             });
